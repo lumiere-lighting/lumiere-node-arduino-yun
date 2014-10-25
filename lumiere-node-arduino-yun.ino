@@ -6,11 +6,17 @@
 #include <JsonParser.h>
 using namespace ArduinoJson::Parser;
 
+
 // Config level objects
 #define NUM_LEDS 8
 #define DATA_PIN 8
+#define ANIMATION_TIME 1000
+#define BRIGHTNESS 25
+// Some lights need a clock pin
+//#define CLOCK_PIN 8
 // Some lights don't come in RGB, but in differnt order
-//#define RGB_CONFIG GRB;
+#define COLOR_ORDER GRB
+
 
 // Top level objects
 JsonParser<64> parser;
@@ -18,13 +24,14 @@ HttpClient client;
 String current_id;
 String api = "http://lumiere.lighting/api/colors?format=hex0&noInput=true&limit=" + String(NUM_LEDS);
 CRGB leds[NUM_LEDS];
+double animation_interval = ANIMATION_TIME / NUM_LEDS;
 
 
 void setup() {
   // Determine RGB
-  FastLED.addLeds<NEOPIXEL, DATA_PIN, GRB>(leds, NUM_LEDS);
+  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
   // Set brightness
-  LEDS.setBrightness(65);
+  LEDS.setBrightness(BRIGHTNESS);
   
   // Connect to bridge
   Bridge.begin();
@@ -77,7 +84,11 @@ void loop() {
         }
         
         // Reset lights
-        fill_solid(&(leds[0]), NUM_LEDS, CRGB::Black);
+        for (int j = NUM_LEDS - 1; j >= 0; j--) {
+          leds[j] = CRGB::Black;
+          delay(animation_interval);
+          FastLED.show();
+        }
         
         // Change lights
         for (int j = 0; j < NUM_LEDS; j++) {
@@ -85,7 +96,7 @@ void loop() {
           String C = String(c);
           leds[j] = strtol(c, NULL, 0);
           
-          delay(200);
+          delay(animation_interval);
           FastLED.show();
         }
       }
