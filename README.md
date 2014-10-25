@@ -10,7 +10,7 @@ There are links to products at Adafruit as reference points; though Adafruit is 
 
 ### Controller
 
-* An [Arduino YÚN](https://www.adafruit.com/product/1498).  There are many different kits and extensions at  [Adafruit](http://www.adafruit.com/category/105).
+* An [Arduino YÚN](https://www.adafruit.com/product/1498).
 
 ### Lights
 
