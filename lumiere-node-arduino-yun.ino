@@ -7,28 +7,37 @@
 using namespace ArduinoJson::Parser;
 
 
-// Config level objects
+/**
+ * Config level objects
+ */
+// Number of LEDS connects
 #define NUM_LEDS 8
+// Data PIN for the lights
 #define DATA_PIN 8
+// How long should the animation run
 #define ANIMATION_TIME 1000
+// Global brightness of the lights
 #define BRIGHTNESS 25
-// Some lights need a clock pin
-//#define CLOCK_PIN 8
 // Some lights don't come in RGB, but in differnt order
 #define COLOR_ORDER GRB
+// Some lights need a clock pin
+//#define CLOCK_PIN 8
+// Maximum number of lights to get from Lumiere, use a lower
+// number to reduce memory a bit
+#define LIGHT_LIMIT NUM_LEDS
 
 
 // Top level objects
-JsonParser<64> parser;
+JsonParser<40> parser;
 HttpClient client;
 String current_id;
-String api = "http://lumiere.lighting/api/colors?format=hex0&noInput=true&limit=" + String(NUM_LEDS);
+String api = "http://lumiere.lighting/api/colors?format=hex0&noInput=true&limit=" + String(LIGHT_LIMIT);
 CRGB leds[NUM_LEDS];
 double animation_interval = ANIMATION_TIME / NUM_LEDS;
 
 
 void setup() {
-  // Determine RGB
+  // Setup leds
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
   // Set brightness
   LEDS.setBrightness(BRIGHTNESS);
