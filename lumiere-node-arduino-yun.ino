@@ -10,21 +10,22 @@ using namespace ArduinoJson::Parser;
 /**
  * Config level objects
  */
-// Number of LEDS connects
-#define NUM_LEDS 8
+
 // Data PIN for the lights
 #define DATA_PIN 8
-// How long should the animation run
-#define ANIMATION_TIME 1000
-// Global brightness of the lights
-#define BRIGHTNESS 25
+// Limit seems to be over 800
+#define NUM_LEDS 115
 // Some lights don't come in RGB, but in differnt order
-#define COLOR_ORDER GRB
-// Some lights need a clock pin
-//#define CLOCK_PIN 8
-// Maximum number of lights to get from Lumiere, use a lower
-// number to reduce memory a bit
-#define LIGHT_LIMIT NUM_LEDS
+#define COLOR_ORDER RGB
+// Global brightness of the lights
+#define BRIGHTNESS 50
+// How long should the animation run
+#define ANIMATION_TIME 1500
+// Poll time (time between HTTP requests)
+#define POLL_TIME 5000
+// Color input limt for API
+//#define INPUT_LIMIT PIXEL_COUNT
+#define LIGHT_LIMIT 15
 
 
 // Top level objects
@@ -68,11 +69,13 @@ void loop() {
   char response_char[str_len];
   response.toCharArray(response_char, str_len);
   
+  
   // Check to see, hackishly, if JSON (maybe check for {)
   if (1) {
     // Parse JSON
     JsonObject parsed = parser.parse(response_char);
     if (parsed.success()) {
+
       // Get ID
       char * char_id = parsed["_id"];
       String id = String(char_id);
@@ -85,18 +88,16 @@ void loop() {
         // a bit
         int color_set_count = 0;
         for (int i = 0; i < NUM_LEDS; i++) {
-          char * s = parsed["colors"][i];
-          String S = String(s);
-          if (S.length() > 2) {
+          if (parsed["colors"][i].success()) {
             color_set_count++;
-          } 
+          }
         }
         
         // Reset lights
         for (int j = NUM_LEDS - 1; j >= 0; j--) {
           leds[j] = CRGB::Black;
-          delay(animation_interval);
           FastLED.show();
+          delay(animation_interval);
         }
         
         // Change lights
@@ -105,8 +106,8 @@ void loop() {
           String C = String(c);
           leds[j] = strtol(c, NULL, 0);
           
-          delay(animation_interval);
           FastLED.show();
+          delay(animation_interval);
         }
       }
     }
@@ -114,5 +115,5 @@ void loop() {
   
   // Flush serial and delay for polling
   Serial.flush();
-  delay(5000);
+  delay(POLL_TIME);
 }
