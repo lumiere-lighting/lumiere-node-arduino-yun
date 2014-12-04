@@ -2,7 +2,7 @@
 
 [Lumiere](http://lumiere.lighting/).  Change holiday lights around the world.
 
-Here you will find code and instructions on how to set up some Lumiere lights with a Raspberry Pi.  By default, it will talk with the main Lumiere application at [lumiere.lighting](http://lumiere.lighting), but you can also set up your own [Lumiere server](https://github.com/lumiere-lighting/lumiere-server).
+Here you will find code and instructions on how to set up some Lumiere lights with an [Arduino Yun](http://arduino.cc/en/Main/ArduinoBoardYun).  By default, it will talk with the main Lumiere application at [lumiere.lighting](http://lumiere.lighting), but you can also set up your own [Lumiere server](https://github.com/lumiere-lighting/lumiere-server).
 
 ## Ingredients
 
@@ -39,7 +39,7 @@ For prototyping, you will probably need the following (note that you can probabl
 1. Install libraries.  There is a "package manager" in the IDE which is suggested.
     1. Download [FastLED](https://github.com/FastLED/FastLED/releases).  The `zip` file.  This was last tested with the `v2-final` version.
         1. Load the library in the Arduino IDE by going to `Skitch > Import Library > Add Library` and choose the `zip` file you downloaded.
-    1. Download [ArdunioJSON](https://github.com/bblanchon/ArduinoJson/archive/v3.4.zip) and load as library like above.
+    1. Download [ArdunioJSON](https://github.com/bblanchon/ArduinoJson/archive/master.zip) and load as library like above.
 1. Copy the default config: `cp lumiere/config-default.h lumiere/config.h`
 1. Edit config values in `lumiere/config.h` as desired.
 1. Open the `lumiere/lumiere.ino` file in the Arduino IDE.
@@ -47,13 +47,6 @@ For prototyping, you will probably need the following (note that you can probabl
 
 ### Hardware
 
-For prototyping with a short string of lights, do the following:
+The following is a diagram using the Yun with a strand of [LPD8806](https://www.adafruit.com/product/306) lights and an external 5V power source.
 
-* Connect the `5V` pin on the Arduino to the power of the lights.
-* Connect the `GND` pin on the Arduino to the ground on the lights.
-* Connect the `digital 8` pin on the Arduino to the data in on the lights.
-* (optional) If your lights have a clock connection, connect this to `digitial 9` pin on the Arduino.
-
-For larger strings of lights, do the following:
-
-(coming soon)
+[![Yun and LPD8806 powered by 5V external diagram](https://raw.githubusercontent.com/lumiere-lighting/lumiere-node-arduino-yun/master/diagrams/yun-lpd8806-5v-external.png)](https://raw.githubusercontent.com/lumiere-lighting/lumiere-node-arduino-yun/master/diagrams/yun-lpd8806-5v-external.png)
