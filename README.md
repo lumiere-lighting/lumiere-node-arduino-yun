@@ -55,7 +55,7 @@ The following is a diagram using the Yun with a strand of [Neopixels](https://le
 
 [![Yun and Neopixels powered by 5V external diagram](https://raw.githubusercontent.com/lumiere-lighting/lumiere-node-arduino-yun/master/diagrams/yun-neopixel-5v-external.png)](https://raw.githubusercontent.com/lumiere-lighting/lumiere-node-arduino-yun/master/diagrams/yun-neopixel-5v-external.png)
 
-Here's the relevant config to update; the default is setup for this case:
+Here's the relevant config to update; the default is setup for this case so there's not much to change:
 
 ```
 // This is up to how many lights you have
