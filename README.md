@@ -38,11 +38,12 @@ For prototyping, you will probably need the following (note that you can probabl
 1. Open up the Arduino IDE.
 1. Install libraries.  There is a "package manager" in the IDE which is suggested.
     1. Download [FastLED](https://github.com/FastLED/FastLED/releases).  The `zip` file.  This was last tested with the `v2-final` version.
-      1. Load the library in the Arduino IDE by going to `Skitch > Import Library > Add Library` and choose the `zip` file you downloaded.
+        1. Load the library in the Arduino IDE by going to `Skitch > Import Library > Add Library` and choose the `zip` file you downloaded.
     1. Download [ArdunioJSON](https://github.com/bblanchon/ArduinoJson/archive/v3.4.zip) and load as library like above.
-1. Open the `lumiere-node-arduino-yun.ino.ino` file in the Arduino IDE.
-1. Update configuration values as needed.
-1. Upload the sketch to your Ardunio Yun.
+1. Copy the default config: `cp lumiere/config-default.h lumiere/config.h`
+1. Edit config values in `lumiere/config.h` as desired.
+1. Open the `lumiere/lumiere.ino` file in the Arduino IDE.
+1. Compile and Upload the sketch to your Ardunio Yun.
 
 ### Hardware
 
