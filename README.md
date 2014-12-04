@@ -20,7 +20,7 @@ There are links to products at Adafruit as reference points; though Adafruit is 
 
 ### Other stuff
 
-For prototyping, you will probably need the following (note that you can probably get a kit with most of this stuff, too):
+For prototyping, you will probably, but not necessarily, need the following (note that you can probably get a kit with most of this stuff, too):
 
 * [Breadboard](http://www.adafruit.com/products/64)
 * [Jumper/prototyping wires](https://www.adafruit.com/product/153)
@@ -47,6 +47,36 @@ For prototyping, you will probably need the following (note that you can probabl
 
 ### Hardware
 
+The following are some example of how to hook up the lights.  Please read all the relevant information about the lights you have before connecting them up.
+
+#### Neopixels and external 5V
+
+The following is a diagram using the Yun with a strand of [Neopixels](https://learn.adafruit.com/adafruit-neopixel-uberguide) lights and an external 5V power source.
+
+[![Yun and Neopixels powered by 5V external diagram](https://raw.githubusercontent.com/lumiere-lighting/lumiere-node-arduino-yun/master/diagrams/yun-neopixel-5v-external.png)](https://raw.githubusercontent.com/lumiere-lighting/lumiere-node-arduino-yun/master/diagrams/yun-neopixel-5v-external.png)
+
+Here's the relevant config to update; the default is setup for this case:
+
+```
+// This is up to how many lights you have
+#define NUM_LEDS 320
+```
+
+#### LPD8806 and external 5V
+
 The following is a diagram using the Yun with a strand of [LPD8806](https://www.adafruit.com/product/306) lights and an external 5V power source.
 
 [![Yun and LPD8806 powered by 5V external diagram](https://raw.githubusercontent.com/lumiere-lighting/lumiere-node-arduino-yun/master/diagrams/yun-lpd8806-5v-external.png)](https://raw.githubusercontent.com/lumiere-lighting/lumiere-node-arduino-yun/master/diagrams/yun-lpd8806-5v-external.png)
+
+Here's the relevant config to update:
+
+```
+#define LED_TYPE LPD8806
+#define DATA_PIN 3
+#define CLOCK_PIN 13
+// This is up to you
+#define NUM_LEDS 320
+// The lights there were tested needed a different order, but
+// this may change for your lights
+#define COLOR_ORDER GRB
+```
