@@ -4,7 +4,7 @@
 #include <ArduinoJson.h>
 
 // Config
-#include "config-default.h"
+//#include "config-default.h"
 #include "config.h"
 
 // Top level objects
@@ -20,13 +20,16 @@ void setup() {
   // will not actually run unless you open the Serial console
   //Serial.begin(9600);
   //while(!Serial);
+  //Serial.println("setup");
 
   // Setup leds.  Not sure of best way to have a single config
   // to set this without a big if--then statement
   if (LED_TYPE == LPD8806) {
+    //Serial.println("LPD8806");
     FastLED.addLeds<LPD8806, DATA_PIN, CLOCK_PIN, COLOR_ORDER, DATA_RATE_MHZ(10)>(leds, NUM_LEDS);
   }
   else {
+    //Serial.println("NEOPIXEL");
     FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
   }
 
@@ -56,6 +59,7 @@ void loop() {
     char c = client.read();
     response += c;
   }
+  //Serial.println(response);
 
   // Convert to char array
   int str_len = response.length() + 1;
@@ -90,19 +94,22 @@ void loop() {
         }
         //Serial.println(color_set_count);
 
-        // Reset lights
-        for (int j = NUM_LEDS - 1; j >= 0; j--) {
-          leds[j] = CRGB::Black;
-          FastLED.show();
-          delay(animation_interval / 2);
+        // Randome animation
+        long a = random(0, 4);
+        if (a == 0) {
+          animFillInOut(parsed, color_set_count);
         }
-
-        // Change lights
-        for (int j = 0; j < NUM_LEDS; j++) {
-          const char * c = parsed["colors"][j % color_set_count];
-          leds[j] = strtol(c, NULL, 0);
-          FastLED.show();
-          delay(animation_interval / 2);
+        else if (a == 1) {
+          animFirefly(parsed, color_set_count);
+        }
+        else if (a == 2) {
+          animFillCenter(parsed, color_set_count);
+        }
+        else if (a == 3) {
+          animScroll(parsed, color_set_count);
+        }
+        else {
+          animFillCenter(parsed, color_set_count);
         }
       }
     }
@@ -115,4 +122,88 @@ void loop() {
   delay(POLL_TIME);
 }
 
-// Do animation of lights
+// Fill black and then fill colors
+void animFillInOut(JsonObject& data, int color_set_count) {
+  // Reset lights
+  for (int j = NUM_LEDS - 1; j >= 0; j--) {
+    leds[j] = CRGB::Black;
+    FastLED.show();
+    delay(animation_interval / 2);
+  }
+
+  // Change lights
+  for (int j = 0; j < NUM_LEDS; j++) {
+    const char * c = data["colors"][j % color_set_count];
+    leds[j] = strtol(c, NULL, 0);
+    FastLED.show();
+    delay(animation_interval / 2);
+  }
+}
+
+// Scroll
+void animScroll(JsonObject& data, int color_set_count) {
+  for (int j = 0; j < NUM_LEDS; j++) {
+    const char * c = data["colors"][j % color_set_count];
+    leds[j] = strtol(c, NULL, 0);
+
+    if (j < NUM_LEDS - 1) {
+      leds[j + 1] = CRGB::Black;
+    }
+    if (j < NUM_LEDS - 2) {
+      leds[j + 2] = CRGB::Black;
+    }
+    
+    FastLED.show();
+    delay(animation_interval);
+  }
+}
+
+// Firefly
+void animFirefly(JsonObject& data, int color_set_count) {
+  // Reset lights
+  for (int j = NUM_LEDS - 1; j >= 0; j--) {
+    leds[j] = CRGB::Black;
+  }
+  FastLED.show();
+
+  // Random show up
+  for (int j = 0; j < NUM_LEDS; j++) {
+    long r = random(0, NUM_LEDS);
+    const char * c = data["colors"][r % color_set_count];
+    leds[r] = strtol(c, NULL, 0);
+    FastLED.show();
+    delay(animation_interval);
+  }
+
+  // Make usre all there
+  
+
+  // Change lights
+  for (int j = 0; j < NUM_LEDS; j++) {
+    const char * c = data["colors"][j % color_set_count];
+    leds[j] = strtol(c, NULL, 0);
+  }
+  FastLED.show();
+}
+
+// Empty then fill from center
+void animFillCenter(JsonObject& data, int color_set_count) {
+  // Reset lights
+  for (int j = floor(NUM_LEDS / 2); j >= 0; j--) {
+    leds[j] = CRGB::Black;
+    leds[NUM_LEDS - j] = CRGB::Black;
+    FastLED.show();
+    delay(animation_interval / 2);
+  }
+
+  // Change lights
+  for (int j = 0; j <= floor(NUM_LEDS / 2); j++) {
+    leds[j] = strtol(data["colors"][j % color_set_count], NULL, 0);
+    leds[NUM_LEDS - j] = strtol(data["colors"][(NUM_LEDS - j) % color_set_count], NULL, 0);
+    FastLED.show();
+    delay(animation_interval / 2);
+  }
+}
+
+
+
