@@ -1,3 +1,5 @@
+**DEPRECATED.  See `lumiere-client-*` projects.**
+
 # Lumière with Ardunio Yun
 
 [Lumiere](http://lumiere.lighting/).  Change holiday lights around the world.
